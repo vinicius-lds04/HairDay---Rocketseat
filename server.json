@@ -1,3 +1,9 @@
 {
-  "schedules": []
+  "schedules": [
+    {
+      "id": 1793143535799,
+      "name": "oximermao",
+      "when": "2026-10-28T18:00:00.000Z"
+    }
+  ]
 }

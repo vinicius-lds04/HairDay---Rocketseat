@@ -5,24 +5,31 @@ import { hoursClick } from "./hours-click.js";
 
 const hours = document.getElementById("hours");
 
-export function hoursLoad({ date }) {
-  // Limpa a lista de horários.
+export function hoursLoad({ date, dailySchedules }) {
+  // Limpa a lista de horários
   hours.innerHTML = "";
+
+  // Obtém a lista de horários ocupados
+  const unavailableHours = dailySchedules.map((schedule) =>
+    dayjs(schedule.when).format("HH:mm"),
+  );
 
   const opening = openingHours.map((hour) => {
     // Recupera somente a hora.
     const [scheduleHour] = hour.split(":");
 
-    // Adiciona a hora na date e verfica se está no passado.
-    const isHourPast = dayjs(date).add(scheduleHour, "hour").isAfter(dayjs());
+    // Adiciona a hora na date e verfica se está no passado
+    const isHourPast = dayjs(date).add(scheduleHour, "hour").isBefore(dayjs());
+
+    const available = !unavailableHours.includes(hour) && !isHourPast;
 
     return {
       hour,
-      available: isHourPast,
-    };
+      available
+    }
   });
 
-  // Renderiza os horários.
+  // Renderiza os horários
   opening.forEach(({ hour, available }) => {
     const li = document.createElement("li");
 
@@ -42,7 +49,7 @@ export function hoursLoad({ date }) {
     hours.append(li);
   });
 
-  // Adiciona o evento de clique nos horários disponíveis.
+  // Adiciona o evento de clique nos horários disponíveis
   hoursClick();
 }
 
